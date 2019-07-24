@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func isOperator(text string) (op string, err error) {
+func isValidOperator(text string) (op string, err error) {
 	switch text {
 	case "/", "*", "+", "-":
 		op = text
@@ -18,34 +18,25 @@ func isOperator(text string) (op string, err error) {
 	return op, errors.New(fmt.Sprintf("Invalid operator: '%s'", text))
 }
 
-func isFloat(text string) (value float64, err error) {
-	value, err = strconv.ParseFloat(text, 64)
-	return
-}
-
 func validate(text string) (a float64, b float64, op string, err error) {
 	words := strings.Fields(text)
 	if len(words) != 3 {
 		err = errors.New(fmt.Sprintf("Invalid input: '%s'", text))
 		return
 	}
-	a, err = isFloat(words[0])
+	a, err = strconv.ParseFloat(words[0], 64)
 	if err != nil {
 		return
 	}
-	op, err = isOperator(words[1])
+	op, err = isValidOperator(words[1])
 	if err != nil {
 		return
 	}
-	b, err = isFloat(words[2])
+	b, err = strconv.ParseFloat(words[2], 64)
 	if err != nil {
 		return
 	}
 	return
-}
-
-func formatFloat(f float64) string {
-	return strconv.FormatFloat(f, 'f', -1, 64)
 }
 
 func eval(text string) (err error) {
@@ -67,19 +58,19 @@ func eval(text string) (err error) {
 		}
 		result = a / b
 	}
-	fmt.Printf("%d %s %d = %s",
-		int(a), op, int(b), formatFloat(result),
+	fmt.Printf("%d %s %d = %v",
+		int(a), op, int(b), result,
 	)
 	fmt.Println()
 	return
 }
 
 func main() {
-	//fmt.Println(isOperator("+"))
-	//fmt.Println(isOperator("/"))
-	//fmt.Println(isOperator("-"))
-	//fmt.Println(isOperator("*"))
-	//fmt.Println(isOperator("x"))
+	//fmt.Println(isValidOperator("+"))
+	//fmt.Println(isValidOperator("/"))
+	//fmt.Println(isValidOperator("-"))
+	//fmt.Println(isValidOperator("*"))
+	//fmt.Println(isValidOperator("x"))
 
 	//fmt.Println(validate("1 + 2"))
 	//fmt.Println(validate("3 / 4"))
