@@ -47,6 +47,7 @@ type result struct {
 // Read and return a list of words in a file
 func listWordInFile(path string) (words []string, err error) {
 	file, err := os.Open(path)
+	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanWords) // avoid buffer overflow when reading big file
 	for scanner.Scan() {
