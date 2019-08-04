@@ -110,7 +110,7 @@ func countWordAll(root string) (map[string]int, error) {
 	for i := 0; i < numWorker; i++ {
 		go func() {
 			collectWordCounter(done, paths, sink)
-			wg.Done()
+			defer wg.Done()
 		}()
 	}
 	go func() {
