@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package passengerfeedback;
+
+// service definition.
+service PassengerFeedbackManagement {
+    rpc CreateFeedback (FeedbackReq) returns (FeedbackRes) {}
+    rpc GetFeedbackByPassengerID (PassengerIDReq) returns (FeedbackList) {}
+    rpc GetFeedbackByBookingCode (BookingCodeReq) returns (FeedbackList) {}
+    rpc DeleteFeedbackByPassengerID(PassengerIDReq) returns (DeleteFeedbackByPassengerIDRes) {}
+}
+
+message PassengerFeedback {
+    string bookingCode = 1;
+    int32 passengerID = 2;
+    string feedback = 3;
+}
+
+message FeedbackList {
+    repeated PassengerFeedback feedbacks = 1;
+}
+
+message FeedbackReq {
+    PassengerFeedback Feedback = 1;
+}
+
+message FeedbackRes {
+    PassengerFeedback Feedback = 1;
+}
+
+message PassengerIDReq {
+    int32 passengerID = 1;
+}
+
+message BookingCodeReq {
+    string bookingCode = 1;
+}
+
+message DeleteFeedbackByPassengerIDRes {
+    int32 deleted = 1;
+}
