@@ -77,12 +77,25 @@ func test(ctx context.Context, c pb.PassengerFeedbackManagementClient) {
 	err = createFeedback(ctx, c, &pb.PassengerFeedback{
 		BookingCode: "#2",
 		PassengerID: 1,
-		Feedback:    "1",
+		Feedback:    "2",
 	})
 	if err != nil {
 		panic(err)
 	}
 	log.Printf("Added f2: %v", &f1)
+
+	// add feedback of a different passenger
+	f3 := pb.PassengerFeedback{
+		BookingCode: "#3",
+		PassengerID: 2,
+		Feedback:    "3",
+	}
+	err = createFeedback(ctx, c, &f3)
+	if err != nil {
+		panic(err)
+	}
+
+	log.Printf("Added f3: %v", &f3)
 
 	res, err := deleteFeedbackByPassengerID(ctx, c, f1.PassengerID)
 	if err != nil {
@@ -93,6 +106,29 @@ func test(ctx context.Context, c pb.PassengerFeedbackManagementClient) {
 	}
 	log.Printf("Deleted all feedback related of passenger: %v", f1.PassengerID)
 
+	// check f1 and f2 are gone
+	val, err = getFeedbackByBookingCode(ctx, c, "#1")
+	if err == nil {
+		panic("All feedback by customer 1 should be removed")
+	}
+	val, err = getFeedbackByBookingCode(ctx, c, "#2")
+	if err == nil {
+		panic("All feedback by customer 1 should be removed")
+	}
+	val, err = getFeedbackByPassengerID(ctx, c, f1.PassengerID)
+	if err == nil {
+		panic("All feedback by customer 1 should be removed")
+	}
+
+	// check f3 still exists
+	val, err = getFeedbackByBookingCode(ctx, c, f3.BookingCode)
+	if err != nil {
+		panic(err)
+	}
+	val, err = getFeedbackByPassengerID(ctx, c, f3.PassengerID)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func main() {

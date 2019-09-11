@@ -53,7 +53,12 @@ func (h *Handler) GetFeedBackByBookingCode(code string) ([]*pb.PassengerFeedback
 func (h *Handler) DeleteFeedBackByPassengerID(pid int32) (deleted int32) {
 	if val, ok := h.PassengerFeedbackTable[pid]; ok {
 		deleted = int32(len(val))
+		for _, f := range val {
+			delete(h.BookingFeedbackTable, f.BookingCode)
+		}
+
 		delete(h.PassengerFeedbackTable, pid)
+
 	}
 	return
 }
